@@ -1,11 +1,10 @@
+from os.path import exists
+
 import qrcode
 import re
 import os
 import sys
 from urllib.parse import urlparse
-
-from qrcode.console_scripts import error_correction
-
 
 def is_valid_url(data):
     parsed_url = urlparse(data)
@@ -31,10 +30,14 @@ def generate_qrcode(data):
 
         img = qr.make_image(fill_color="black", back_color="white")
 
+        if not os.path.exists('./qrcodes/'):
+            os.mkdir('qrcodes')
+
         filename=sanitize_filename(data)
-        img.save(filename)
+        img.save(f"qrcodes/{filename}")
 
         print(f"QR Code salvo com sucesso como {filename}")
+
     except Exception as e:
         print(f"Erro ao gerar o QR Code: {e}", file=sys.stderr)
 
